@@ -1,0 +1,17 @@
+=== PURPOSE ===
+Modules provide the compositional functions the pipeline goes through
+by means of a server-client model wherein the module provider is
+started by AutoMuse (the client) and communication between the two
+commences.
+
+=== CONFIGURATION STORAGE ===
+Each module provider (server) maintains its own configurations. The
+client forwards configuration communications to these servers which
+must then modify their configurations accordingly. However, if the
+user so desires, they may specify variables shared by any number of
+servers to be "tied" together. This tying occurs on the client side
+only. Whenever a configuration is made for a shared variable, the
+client forwards the configuration to the many servers which share
+it.
+
+=== 

@@ -1,0 +1,132 @@
+I'll write down my thoughts and ideas here, with little to no organization.
+
+=== ON RULESET IMPLEMENTATION ===
+As is, rulesets are meant to serve as "shader packs": sets of modules which
+are inserted into the pipeline in order to modify its behavior. The problem
+is that implementing such a system requires live behavior modification
+which needs be implemented via one of the following means:
+
+	- Scripting Language
+	- Variable Modification
+	- Independent Servers
+	- Recompilation*
+
+*This is not actually a live implementation since it, at the very least,
+requires that the program be restarted.
+
+A scripting language requires the creation of an interpreter, though it is
+possible to use a preexisting language.
+
+Variable modification, in my opinion, defeats the purpose of rulesets since
+it merely allows said "rulesets" to modify the values of preexisting
+configuration variables in order to alter the base behavior of the program.
+This turns them into glorified configuration/initialization files. They
+become dependent upon the depth of the configuration implementation.
+
+Servers (rulesets) running independently from the program to which calls
+can be made employ the same concept behind language servers (EG CCLS).
+This allows them to be developed and compiled individually and allows for
+live ruleset loading/unloading. It also places no limit upon the type of
+language employed in the ruleset's creation.
+
+Finally, there is recompilation-- posiibly on demand-- which requires
+that the program's (AKA composer module) source be injected first with the
+ruleset modules then rebuilt and restarted. Obviously this is not quite
+the best solution.
+
+
+I think I'll opt for the server implementation.
+
+=== SERVER-CLIENT MODEL ===
+Having opted for the server-client model, there're still a few issues which
+need be overcome. And a couple additional questions're rasied by this
+model.
+
+Firstly, there's the question of how the ruleset server is to be started.
+Either AutoMuse starts it up or the user will have already started it up
+and given to AutoMuse a means by which to communicate with it. If the
+former method is chosen, the problem of platform interoperability will
+have to be addressed. If, on the other hand, the second solution is
+chosen, the means of communication will need to be addressed.
+
+Secondly, there's the question of the degree of modularity. As I've
+previously concluded, the most modular design is always nothing at all
+because everything can be made from nothing whereas fewer things can be
+made from something. Basically, if the base pipeline merely serves as a
+series of functions whose purpose is to call other functions on the server,
+then AutoMuse is purely a useless intermediary as most of the compositional
+process takes place in an external program. Therefore, the Composer
+class-module ought to perhaps be designed as a "ruleset" itself, with
+users allowed to simply swap it out for another.
+
+Although, still addressing the second question, that'dn't be true and
+proper modularity. It'd certainly be better than a fixed and static program.
+However, a properly modular program ought to allow different parts to be
+individually swapped out. A modern printer is not, for instance, typically
+thought of as modular simply because its cartridges can be swapped out.
+That may be a pretty terrible example, actually, but, basically, a program
+is not modular simply because the larger portion of it can be removed and
+replaced.
+
+Instead, therefore, what I propose is a fixed pipeline found within the
+Composer class-module from which calls to (potentially) many ruleset
+servers can be made. A given ruleset server can advertise its modules
+(EG partitioner, harmonic generator, etc.) and the Composer can make calls
+to said modules if they are available and the user has designated their
+use.
+
+Now, to address the first question, I think it best if AutoMuse is allowed
+to initialize the servers itself. It's a somewhat arbitrary decision, but
+by allowing AutoMuse to manage program initialization it can ensure that
+the server is actually started instead of trusting the user, and equipping
+AutoMuse with this capability may enable better integration later.
+
+Anyways, regardless of which method is chosen (though the method has
+already been chosen) the next problem is enabling interprogram communication.
+The more advanced and professional approach, it seems, is the use of shared
+memory or other OS-level integration. However, for now, the simplest
+approach seems to be the use of the filesystem. In other words, the client
+writes/reads to/from an "exchange directory" and likewise unto the server.
+A struct/class can be written to facilitate all these functions together.
+
+Fine, but what about configuration storage? Should it be the client or
+server that maintains it? Suppose two servers are loaded which both require
+a "key" variable. They'd both attempt to load it into the configuration and,
+in this case, it'd likely work as intended. If, on the other hand, the
+servers maintained their own copies of the key variable, the user'd be
+allowed to configure conflicting values. While there's nothing wrong with
+providing the user that liberty, it may facilitate unintentional
+configuration in this manner. However, if the servers interpret the value
+of a variable differently, there may be a fatal error (crash). Therefore,
+I think it best if servers maintain their own configurations. Perhaps the
+client ought to provide the ability to "tie" variables together when they
+should be shared between multiple servers.
+
+=== THE FILESYSTEM ===
+There're two approaches to the final distribution of the AutoMuse program.
+It can be provided portably as an AppImage or offered as an installable
+application. This is important now because it affects filesystem handling
+within the program. If it is provided as an installable application, it
+ought to provide a directory for the storage of servers...
+
+Actually, it doesnn't much matter. A portable application is merely an
+executable which can be run from any directory. An installed app is
+essentially an executable which has been locked in place. Both'll require
+external files which can be accessed from the same absolute directory or
+from one of the user's choosing.
+
+At any rate, then, the app must access a directory called "servers" within
+which subdirectories corresponding to each server ought to be stored. These
+subdirectories will, in turn, contain the executable for each server and an
+additional subdirectory called "exchanges" within which the server and the
+client (AutoMuse) communicate.
+
+=== RENAMING RULESETS ===
+The name "ruleset" doesn't make much sense anymore. If the Composer is
+considered a "class-module" (a type of module) and the servers modify its
+behavior, they are technically submodules. But for simplicity, they ought to
+be called "module servers". However, for the "average person", it may make
+more sense to call these "modulepacks" or "modulesets". I imagine, of
+course, that these can be abbreviated eventually to "modpacks"/"modsets"
+respectively. So maybe the "severs" directory should be the "modules"
+directory instead.

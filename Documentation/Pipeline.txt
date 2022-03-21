@@ -1,0 +1,68 @@
+=== PIPELINE CONCEPT ===
+The compositional process (set off by the "Compose()" function) is similar to the rendering process
+used for 3D graphics in that it is structured like a pipeline featuring a series of "shaders"
+(modules) whereby the overall process can be manipulated (by the user and ruleset) to produce a
+specific musical result. It consists of three principal stages:
+
+	1. Abstract
+	2. Frame
+	3. Development (Optional)
+
+It is during the first stage that concepts such as structure, duration, harmony, and basic rhythm
+are considered. This being complete, the abstract will have been constructed. The fundamental, harmonic
+notes must then be placed according to the fashion the program selects (block, arpeggiative,
+intermittent), leading to the creation of the frame. Depending on the configuration as well as
+the ruleset provided, non-harmonic notes can now be inserted in order to further develop the melody
+into something of greater sophistication. It is at this final stage that passes, auxiliaries,
+escapes, and ornaments are added, leading to the creation of the development.
+
+Arguably,the abstraction and framing processes can be viewed as one and the same, but it is
+useful to separate them since it is during the former stage that a "plan" is made, whereas
+during the framing process the "construction" begins. Moreover, it is during framing that
+additional design considerations are made such as the relationship between voices and complexity
+attenuation (how many voices ought to play simultaneously/rests).
+
+=== SUBSTAGES ===
+As for the specific processes encountered within each stage, these are:
+
+	1. Preparations (Input Gathering, Precalculations, etc.)
+	2. Abstract
+		A. Partitioner
+		B. Harmonic Generator
+	3. Frame
+		A. Harmonic Instantiator
+	4. Development
+		A. Transitional Generator
+		B. Detailer
+
+And their explanations:
+
+	2A. Form is generated as a series of sections whose lengths are divisions of the overall
+	piece's total length. The partitioner is allowed to indicate the relationship of the
+	various sections (repetitions, same harmony, etc.).
+	2B. The unique sections and subsections are iterated through wherein chord progressions
+	are generated. In other words, these're further subdivided into domains for each chord.
+
+	3A. Each domain is iterated through and further subdivided into mottes and baileys based
+	on the fashion chosen by the instantiator. The fundamental, harmonic notes're also
+	placed at this stage (mottes).
+
+	4A. Iterating through the baileys, transitions are generated (passes, suspensions, etc.).
+	In the case that suspensions, retardations, etc. are generated, the generator is granted
+	permission to modify the preexisting notes' (mottes) rhythmic values.
+	4B. Ornaments such as mordents, trills, etc.
+
+=== DATA STRUCTURES ===
+The music is internally encoded in the following hierarchy:
+
+	1. List
+	2. Section
+	3. Domain
+	4. Motte/Bailey
+	5. Note/Rest
+
+The partitioner constructs a series of sections which're strung together into a section list. The
+list itself contains metadata (EG section relationships). This list is forwarded to the harmonic
+generator from which it emerges featuring domains. So on and so forth.
+
+
