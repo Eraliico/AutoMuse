@@ -1,25 +1,27 @@
 #pragma once
 
-#include <unordered_map>
 #include <string>
-#include <stdexcept>
-#include <fstream>
+#include "Concepts.h"
+#include "Die.h"
+#include <cassert>
 
 class Composer{
 	public:
 		//Pipeline Entrypoint (Partitioner)
-		void Compose(const std::string& filepath) const;
-
-		void LoadRuleset(const std::string& filepath);
-		void Configure(const std::string& setting, const std::string& value);
+		void Compose() const;
 
 	private:
-		//Compositional Configuration
-		std::unordered_map<std::string, std::string> configuration{
-			{"duration", "16"},
-			{"quirk", "0"}
-		};
+		//Pipeline Functions
+		void HarmonicGenerator(std::vector<Concepts::Section> composition) const; 
 
-		//Abstract Stage
+		//Technical Configuration
+		std::string midipath;
 
+		//Musical Configuration
+		float duration = 16.0f;
+		unsigned int maxSections = 4;
+
+		//Dice
+		Die<int> iDie;
+		Die<float> fDie;
 };

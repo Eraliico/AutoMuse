@@ -1,32 +1,47 @@
 #include "Composer.h"
 
-void Composer::Compose(const std::string& filepath) const{
+void Composer::Compose() const{
 	//Partitioner
-	
-}
-void Composer::LoadRuleset(const std::string& filepath){
-	//Opens and Validates File
-	std::ifstream ruleset{filepath};
-	ruleset ? 0 : throw std::invalid_argument{filepath + " could not be opened!"};
+	//Roll for # of sections
+	const int nSections = iDie(1, maxSections);
+	const int unique = iDie(1, nSections);
+	assert(unique <= nSections);
 
-	//Loads Configuartion Variables
+	//Compute percentages per unique ID
+	float percentsPerID[unique];
 	{
-		std::string varLine;
-		for(std::getline(ruleset, varLine); !varLine.empty(); std::getline(ruleset, varLine)){
-			//Extract Line Contents
-			const auto firstSpace = varLine.find_first_of(' ');
+		float totalPercentage = 0.0f;
+		while(totalPercentage < 1.0f){
+			for(int i = 0; i < unique; ++i){
+				const float growth = fDie(.01f, .05f);
+				percentsPerID[i] += growth;
+				totalPercentage += growth;
+			}
+		}
+		percentsPerID[unique - 1] -= totalPercentage - 1.0f;
+	}
 
-			configuration[varLine.substr(0, firstSpace)] = firstSpace != varLine.npos ? varLine.substr(firstSpace + 1) : "";
+	//Assign duplicate sections
+	int duplicatesPerID[unique];
+	{
+		const int remainder = nSections - unique;
+		for(int i = 0; i < remainder; ++i){
+			++duplicatesPerID[iDie(0, unique - 1)];
 		}
 	}
 
-	//THE REST
-}
-void Composer::Configure(const std::string& setting, const std::string& value){
-	auto settingInConfig = configuration.find(setting);
-	if(settingInConfig != configuration.end()){
-		settingInConfig->second = value;
-	}else{
-		throw std::invalid_argument{setting + " was not found!"};
+
+	//Construct sections
+	std::vector<Concepts::Section> composition;
+	composition.reserve(nSections);
+	for(int id = 0; id < unique; ++id){
+		for(int d = 0; d <= duplicatesPerID[id]; ++d){
+			composition.emplace_back(id, percentsPerID[id] / (duplicatesPerID[id] + 1.0f) * duration);
+		}
 	}
+
+	//Pass to harmonic generator
+	HarmonicGenerator(composition);
+
 }
+void Composer::HarmonicGenerator(std::vector<Concepts::Section> composition) const{}

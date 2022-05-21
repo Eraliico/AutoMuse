@@ -5,7 +5,4 @@
 #include "Composer.h"
 
 int main(){
-	Composer bruh;
-	bruh.LoadRuleset("example.txt");
-	bruh.PrintConfig(std::cout);
 }
