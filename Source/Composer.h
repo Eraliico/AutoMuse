@@ -2,8 +2,9 @@
 
 #include <string>
 #include "Concepts.h"
-#include "Die.h"
+#include "Dice.h"
 #include <cassert>
+#include <algorithm>
 
 class Composer{
 	public:
@@ -20,8 +21,11 @@ class Composer{
 		//Musical Configuration
 		float duration = 16.0f;
 		unsigned int maxSections = 4;
+		Concepts::Tone keyTone = Concepts::Tone::A;
+		int keySharpness = 0;
+		Concepts::Mode keyMode = Concepts::Mode::Major;
 
 		//Dice
-		Die<int> iDie;
-		Die<float> fDie;
+		DiscreteDie iDie;
+		RealDie fDie;
 };

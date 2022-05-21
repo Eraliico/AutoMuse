@@ -3,7 +3,7 @@
 #include <vector>
 
 namespace Concepts{
-	enum Tone{
+	enum class Tone{
 		A = 0,
 		B = 2,
 		C = 3,
@@ -12,7 +12,7 @@ namespace Concepts{
 		F = 8,
 		G = 10
 	};
-	enum Quality{
+	enum class Quality{
 		Major,
 		Minor,
 		Diminished,
@@ -24,10 +24,19 @@ namespace Concepts{
 		Minor7,
 		Diminished7
 	};
-	enum Fashion{
+	enum class Fashion{
 		Block,
 		Arpeggiative,
 		Intermittent
+	};
+	enum class Mode{
+		Major,
+		Dorian,
+		Phrygian,
+		Lydian,
+		Mixolydian,
+		Minor,
+		Locrian
 	};
 
 	struct Note{

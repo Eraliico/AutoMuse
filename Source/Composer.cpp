@@ -3,8 +3,8 @@
 void Composer::Compose() const{
 	//Partitioner
 	//Roll for # of sections
-	const int nSections = iDie(1, maxSections);
-	const int unique = iDie(1, nSections);
+	const int nSections = iDie.Roll(1, maxSections);
+	const int unique = iDie.Roll(1, nSections);
 	assert(unique <= nSections);
 
 	//Compute percentages per unique ID
@@ -13,7 +13,7 @@ void Composer::Compose() const{
 		float totalPercentage = 0.0f;
 		while(totalPercentage < 1.0f){
 			for(int i = 0; i < unique; ++i){
-				const float growth = fDie(.01f, .05f);
+				const float growth = fDie.Roll(.01f, .05f);
 				percentsPerID[i] += growth;
 				totalPercentage += growth;
 			}
@@ -26,7 +26,7 @@ void Composer::Compose() const{
 	{
 		const int remainder = nSections - unique;
 		for(int i = 0; i < remainder; ++i){
-			++duplicatesPerID[iDie(0, unique - 1)];
+			++duplicatesPerID[iDie.Roll(0, unique - 1)];
 		}
 	}
 
@@ -39,9 +39,12 @@ void Composer::Compose() const{
 			composition.emplace_back(id, percentsPerID[id] / (duplicatesPerID[id] + 1.0f) * duration);
 		}
 	}
+	std::shuffle(composition.begin(), composition.end(), std::mt19937(std::random_device{}()));
 
 	//Pass to harmonic generator
 	HarmonicGenerator(composition);
 
 }
-void Composer::HarmonicGenerator(std::vector<Concepts::Section> composition) const{}
+void Composer::HarmonicGenerator(std::vector<Concepts::Section> composition) const{
+	
+}
