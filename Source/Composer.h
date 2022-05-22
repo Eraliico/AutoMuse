@@ -9,14 +9,14 @@
 class Composer{
 	public:
 		//Pipeline Entrypoint (Partitioner)
-		void Compose() const;
+		std::vector<Concepts::Section> Compose() const;
 
 	private:
 		//Pipeline Functions
 		void HarmonicGenerator(std::vector<Concepts::Section> composition) const; 
 
 		//Technical Configuration
-		std::string midipath;
+		std::string midipath = "filler";
 
 		//Musical Configuration
 		float duration = 16.0f;
@@ -26,6 +26,6 @@ class Composer{
 		Concepts::Mode keyMode = Concepts::Mode::Major;
 
 		//Dice
-		DiscreteDie iDie;
-		RealDie fDie;
+		DiscreteDie iDie{0, 1};
+		RealDie fDie{0.0f, 1.0f};
 };

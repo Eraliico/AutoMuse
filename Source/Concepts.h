@@ -64,6 +64,9 @@ namespace Concepts{
 		bool hasTransition;
 	};
 	struct Section : public Partition<Domain>{
+		Section(const unsigned int id, const float dur):
+			identifier(id),
+			duration(dur){}
 		unsigned int identifier;
 		float duration;
 	};

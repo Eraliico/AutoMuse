@@ -1,12 +1,13 @@
-#include "Dice.h"
 #include <iostream>
+#include "Composer.h"
+
+Composer composer;
 
 int main(){
-	DiscreteDie dd{0, 10};
-	RealDie rd{0.0f, 10.0f};
+	const auto test = composer.Compose();
 
-	for(int i = 0; i < 10; ++i){
-		std::cout << dd() << std::endl << rd() << std::endl;
+	for(const auto& s : test){
+		std::cout << s.identifier << ": " << s.duration << " measures\n";
 	}
 
 	return 0;
