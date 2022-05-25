@@ -1,14 +1,10 @@
 #include <iostream>
 #include "Composer.h"
+#include <string>
 
-Composer composer;
-
-int main(){
-	const auto test = composer.Compose();
-
-	for(const auto& s : test){
-		std::cout << s.identifier << ": " << s.duration << " measures\n";
-	}
-
+int main(int argc, char** argv){
+	Composer composer{{(Concepts::Tone)std::stoi(std::string(argv[1])), (Concepts::Mode)std::stoi(std::string(argv[2]))}};
+	composer.Compose();
+	
 	return 0;
 }

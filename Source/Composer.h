@@ -5,15 +5,22 @@
 #include "Dice.h"
 #include <cassert>
 #include <algorithm>
+#include <iostream>
+#include <string>
 
 class Composer{
 	public:
+		//Constructor (FOR DEBUGGING)
+		Composer() = default;
+		Composer(const Concepts::Key& keyRef);
+
 		//Pipeline Entrypoint (Partitioner)
-		std::vector<Concepts::Section> Compose() const;
+		void Compose() const;
 
 	private:
 		//Pipeline Functions
-		void HarmonicGenerator(std::vector<Concepts::Section> composition) const; 
+		void HarmonicGenerator(Concepts::Composition& composition) const; 
+		void DEBUG_EndOfPipeline(Concepts::Composition& composition) const;
 
 		//Technical Configuration
 		std::string midipath = "filler";
@@ -21,11 +28,11 @@ class Composer{
 		//Musical Configuration
 		float duration = 16.0f;
 		unsigned int maxSections = 4;
-		Concepts::Tone keyTone = Concepts::Tone::A;
-		int keySharpness = 0;
-		Concepts::Mode keyMode = Concepts::Mode::Major;
+		Concepts::Key key = {Concepts::Tone::A, Concepts::Mode::Minor};
+		float averageChordDensity = 2.0f;
 
 		//Dice
-		DiscreteDie iDie{0, 1};
-		RealDie fDie{0.0f, 1.0f};
+		DiscreteDie sectionsDie{1, (int)maxSections};
+		RealDie growthDie{0.01f, 0.05f};
+		DiscreteDie degreeDie{0, 6};
 };
